@@ -9,6 +9,14 @@
         "applyTo": {"label": "Apply To" },
         "autoShowOnChange": {"label": "Auto Show On Change" }
       }
+    },
+    "ToggleLightsBehavior": {
+      "Label": "Toggle Lights",
+      "FIELDS": {
+        "lightUuids": {"label": "Lights" },
+        "eventType": {"label": "Event Type" },
+        "operation": {"label": "Operation Type" }
+      }
     }
   }
 }

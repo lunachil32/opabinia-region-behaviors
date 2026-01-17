@@ -8,7 +8,8 @@
     "esmodules": ["scripts/module.js"],
     "documentTypes": {
         "RegionBehavior": {
-            "changeJournalOwnership": {}
+            "changeJournalOwnership": {},
+            "toggleLights": {}
         }
     },
     "languages": [
