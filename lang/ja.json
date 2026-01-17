@@ -1,7 +1,14 @@
 {
   "OpabiniaRegionBehaviors": {
     "ChangeJournalOwnershipBehavior": {
-      "Label": "Change Journal Ownership"
+      "Label": "Change Journal Ownership",
+      "FIELDS": {
+        "targetUuid": {"label": "資料の UUID" },
+        "eventType": {"label": "動作イベントタイプ" },
+        "changeToLevel": {"label": "権限の変更先" },
+        "applyTo": {"label": "適用するユーザーの範囲" },
+        "autoShowOnChange": {"label": "自動で資料を開く" }
+      }
     }
   }
 }

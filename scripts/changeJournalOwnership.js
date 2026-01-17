@@ -1,11 +1,11 @@
-import { MODULE_ID, MODULE_FLAGS, LOCALIZATION_PREFIXES } from "./consts.js";
+import { MODULE_ID, MODULE_FLAGS, MODULE_LOCALIZATION_PREFIXES } from "./consts.js";
 
 const CHANGE_JOURNAL_OWNERSHIP_TYPE = `${MODULE_ID}.changeJournalOwnership`;
 
 export function RegisterChangeJournalOwnershipBehavior()
 {
   CONFIG.RegionBehavior.dataModels[CHANGE_JOURNAL_OWNERSHIP_TYPE] = ChangeJournalOwnershipBehavior;
-  CONFIG.RegionBehavior.typeLabels[CHANGE_JOURNAL_OWNERSHIP_TYPE] = `${LOCALIZATION_PREFIXES}.ChangeJournalOwnershipBehavior.Label`;
+  CONFIG.RegionBehavior.typeLabels[CHANGE_JOURNAL_OWNERSHIP_TYPE] = `${MODULE_LOCALIZATION_PREFIXES}.ChangeJournalOwnershipBehavior.Label`;
 }
 
 const ALLOWED_EVENTS = [
@@ -16,7 +16,9 @@ const ALLOWED_EVENTS = [
 ];
 
 class ChangeJournalOwnershipBehavior extends foundry.data.regionBehaviors.RegionBehaviorType {
-
+  static LOCALIZATION_PREFIXES  = [
+    `${MODULE_LOCALIZATION_PREFIXES}.ChangeJournalOwnershipBehavior`
+  ];
   static defineSchema() {
     const f = foundry.data.fields;
     const EVENT_CHOICES = () =>
