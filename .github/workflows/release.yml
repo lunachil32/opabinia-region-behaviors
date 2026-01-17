@@ -1,0 +1,68 @@
+name: Release (FoundryVTT Module)
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  MODULE_ID: opabinia-region-behaviors
+  REPO: lunachil32/opabinia-region-behaviors
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Derive version/tag
+        id: vars
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare dist
+        shell: bash
+        run: |
+          mkdir -p dist package/${MODULE_ID}
+
+          # module.json を「リリース成果物用」に書き換えて dist に出力
+          MANIFEST="https://github.com/${REPO}/releases/latest/download/module.json"
+          DOWNLOAD="https://github.com/${REPO}/releases/download/${{ steps.vars.outputs.tag }}/${MODULE_ID}.zip"
+
+          jq --arg ver "${{ steps.vars.outputs.version }}" \
+             --arg manifest "$MANIFEST" \
+             --arg download "$DOWNLOAD" \
+             '
+             .version = $ver
+             | .manifest = $manifest
+             | .download = $download
+             ' module.json > dist/module.json
+
+          # zip の中身を moduleId フォルダ配下に揃える（Foundry での展開が安定）
+          cp dist/module.json package/${MODULE_ID}/module.json
+          [ -d lang ] && cp -r lang package/${MODULE_ID}/lang
+          [ -d scripts ] && cp -r scripts package/${MODULE_ID}/scripts
+
+          # 必要なら他のフォルダもここで copy（templates, styles, assets 等）
+
+          (cd package && zip -r "../dist/${MODULE_ID}.zip" "${MODULE_ID}")
+
+      - name: Create GitHub Release + upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.tag }}
+          name: ${{ steps.vars.outputs.tag }}
+          generate_release_notes: true
+          files: |
+            dist/module.json
+            dist/${{ env.MODULE_ID }}.zip
